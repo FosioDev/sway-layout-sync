@@ -96,7 +96,8 @@ func runServer(addr string) {
 	fmt.Printf("[Host] Server listening on %s. Waiting for clients...\n", addr)
 
 	srv := &Server{
-		clients: make(map[net.Conn]struct{}),
+		clients:       make(map[net.Conn]struct{}),
+		currentLayout: -1,
 	}
 
 	// Task 1: Accept incoming client connections
@@ -154,11 +155,13 @@ func runServer(addr string) {
 			idx := *ev.Input.ActiveLayoutIndex
 
 			srv.mu.Lock()
-			srv.currentLayout = idx
-			fmt.Printf("[Host] Layout switched to index %d. Broadcasting...\n", idx)
+			if idx != srv.currentLayout {
+				srv.currentLayout = idx
+				fmt.Printf("[Host] Layout switched to index %d. Broadcasting...\n", idx)
 
-			for client := range srv.clients {
-				_, _ = fmt.Fprintf(client, "%d\n", idx)
+				for client := range srv.clients {
+					_, _ = fmt.Fprintf(client, "%d\n", idx)
+				}
 			}
 			srv.mu.Unlock()
 		}
