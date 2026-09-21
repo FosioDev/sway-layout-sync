@@ -16,7 +16,7 @@ When using Sway on both the host and guest inside QEMU/KVM (`virt-manager` / SPI
 1. **Identical layout configurations**:
    The host and guest must have the **exact same layouts in the exact same order** in their Sway configurations (e.g., `xkb_layout "us,ru"` on both).
 2. **Change guest Caps Lock behaviour**:
-   Replace `grp:caps_toggle` with `caps:shift_caps_cancel` in the guest’s Sway configuration so the guest does not fight with the host. The host alone will handle physical Caps Lock presses.
+   Replace `grp:caps_toggle` with `caps:none` in the guest’s Sway configuration so the guest does not fight with the host. The host alone will handle physical Caps Lock presses.
 
 ## Installation
 
@@ -59,11 +59,11 @@ input "type:keyboard" {
 ```
 
 ### Guest
-Prevents lone Caps Lock from turning on CAPITAL letters in the VM, while still allowing Shift + Caps Lock to toggle real Caps Lock:
+
 ```sway
 input "type:keyboard" {
     xkb_layout "us,ru"
-    xkb_options "caps:shift_caps_cancel"
+    xkb_options "caps:none"
 }
 ```
 
